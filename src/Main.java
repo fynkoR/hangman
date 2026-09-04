@@ -58,54 +58,39 @@ public class Main {
         }
     }
 
-    public static void draw(String[][] array, int error){
+    public static void draw(List<List<String>> array, int error){
         switch (error){
             case 0:
-                drawArray(array);
+                showArrayList(array);
                 break;
             case 1:
-                array[2][4] = "O";
-                drawArray(array);
+                array.get(2).set(4, "O");
+                showArrayList(array);
                 break;
             case 2:
-                array[2][4] = "O";
-                array[3][3] = "|";
-                drawArray(array);
+                array.get(3).set(3, "|");
+                showArrayList(array);
                 break;
             case 3:
-                array[2][4] = "O";
-                array[3][3] = "|";
-                array[3][2] = "/";
-                drawArray(array);
+                array.get(3).set(2, "/");
+                showArrayList(array);
                 break;
             case 4:
-                array[2][4] = "O";
-                array[3][3] = "|";
-                array[3][2] = "/";
-                array[3][4] = "|";
-                drawArray(array);
+                array.get(3).set(4, "|");
+                showArrayList(array);
                 break;
             case 5:
-                array[2][4] = "O";
-                array[3][3] = "|";
-                array[3][2] = "/";
-                array[3][4] = "|";
-                array[4][3] = "|";
-                drawArray(array);
+                array.get(4).set(3, "|");
+                showArrayList(array);
                 break;
             case 6:
-                array[2][4] = "O";
-                array[3][3] = "|";
-                array[3][2] = "/";
-                array[3][4] = "|";
-                array[4][3] = "|";
-                array[4][4] = "|";
-                drawArray(array);
+                array.get(4).set(4, "|");
+                showArrayList(array);
                 break;
         }
     }
 
-    public static void game(String word, String mask, Scanner in, String[][] array){
+    public static void game(String word, String mask, Scanner in, List<List<String>> array){
         char letter;
         char[] arrWord = word.toCharArray();
         char[] arrMask = mask.toCharArray();
@@ -113,8 +98,7 @@ public class Main {
 
         while((error < 6) && !(word.equals(mask))){
             System.out.println(mask);
-            System.out.println("Enter letter of gue)ss: ");
-            letter = in.next().charAt(0);
+            letter = validationLetter(in);
             int indexWord = word.indexOf(String.valueOf(letter));
 
             if(indexWord >= 0){
@@ -150,13 +134,41 @@ public class Main {
         }
     }
 
-    public static String[][] resetArray(String[][] arrayStart){
-        String[][] result = new String[arrayStart.length][];
-        for(int i = 0; i < arrayStart.length; i++){
-            result[i] = new String[arrayStart[i].length];
-            System.arraycopy(arrayStart[i], 0, result[i], 0, arrayStart.length - 1);
+    public static char validationLetter(Scanner scanner){
+        char letter = 0;
+        boolean check = false;
+        while(!check){
+            System.out.println("Enter letter of guess: ");
+            letter = scanner.next().charAt(0);
+            if((letter >= 'а' && letter <= 'я') || letter == 'ё'){
+                check = true;
+            }
+            else{
+                System.out.println("Letter must be lowercase, from 'a' to 'я'.");
+            }
         }
-        return result;
+        return letter;
+    }
+
+    public static List<List<String>> startArrayList(){
+        List<List<String>> arr = new ArrayList<>();
+        arr.add(new ArrayList<>(List.of("|", "-", "-", "-", "", "")));
+        arr.add(new ArrayList<>(List.of("|", "", "", "", "|", "")));
+        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
+        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
+        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
+        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
+        arr.add(new ArrayList<>(List.of("_", "_", "_", "_", "_", "")));
+        return arr;
+    }
+
+    public static void showArrayList(List<List<String>> arr){
+        for(int i = 0; i < arr.size(); i++){
+            for(int j = 0; j < arr.get(i).size(); j++){
+                System.out.print(arr.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
@@ -164,38 +176,17 @@ public class Main {
         String fileName = "words.txt";
         ArrayList<String> array = fileToArray(fileName);
         boolean game = true;
-        String[][] drawArrayEnd = {
-                {"|", "-", "-", "-", "", ""},
-                {"|", "", "", "", "|", ""},
-                {"|", "", "", "", "O", ""},
-                {"|", "", "/", "|", "|", ""},
-                {"|", "", "", "|", "|", ""},
-                {"|", "", "", "", "", ""},
-                {"_", "_", "_", "_", "_", ""}
-        };
-
-        String[][] drawArrayStart = {
-                {"|", "-", "-", "-", "", ""},
-                {"|", "", "", "", "|", ""},
-                {"|", "", "", "", "", ""},
-                {"|", "", "", "", "", ""},
-                {"|", "", "", "", "", ""},
-                {"|", "", "", "", "", ""},
-                {"_", "_", "_", "_", "_", ""}
-        };
 
         while(game){
-            //System.out.println(askToStart(scanner)); // true or false in cmd
             game = askToStart(scanner);
             if(game){
                 String word = rndWord(array);
                 System.out.println(word); // random word
-                //System.out.println(maskWord(word));
 
-                //draw(drawArrayStart, 6);
+                List<List<String>> arr = startArrayList();
+                showArrayList(arr);
 
-                String[][] arrayDraw = resetArray(drawArrayStart);
-                game(word, maskWord(word), scanner, arrayDraw);
+                game(word, maskWord(word), scanner, arr);
             }
         }
     }
