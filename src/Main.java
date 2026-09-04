@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -47,15 +46,6 @@ public class Main {
             mask = mask.concat("*");
         }
         return mask;
-    }
-
-    public static void drawArray(String[][] array){
-        for(String[] row : array) {
-            for(String element : row){
-                System.out.print(element + " ");
-            }
-            System.out.println();
-        }
     }
 
     public static void draw(List<List<String>> array, int error){
@@ -181,7 +171,6 @@ public class Main {
             game = askToStart(scanner);
             if(game){
                 String word = rndWord(array);
-                System.out.println(word); // random word
 
                 List<List<String>> arr = startArrayList();
                 showArrayList(arr);
