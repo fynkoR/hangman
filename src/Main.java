@@ -25,7 +25,7 @@ public class Main {
         ArrayList<String> array = null;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String s;
-            array = new ArrayList<String>();
+            array = new ArrayList<>();
             while ((s = br.readLine()) != null) {
                 array.add(s);
             }
