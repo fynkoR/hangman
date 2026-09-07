@@ -80,47 +80,44 @@ public class Main {
         }
     }
 
-    public static void game(String word, String mask, Scanner in, List<List<String>> array){
+    public static void doGame(String word, Scanner in, List<List<String>> array){
+        String mask = maskWord(word);
+        StringBuilder maskBuilder = new StringBuilder(mask);
         char letter;
-        char[] arrWord = word.toCharArray();
-        char[] arrMask = mask.toCharArray();
         int error = 0;
+        Set<Character> usedChars = new HashSet<>();
 
-        while((error < 6) && !(word.equals(mask))){
-            System.out.println(mask);
+        while((error < 6) && !(word.equals(maskBuilder.toString()))){
+            System.out.println(maskBuilder);
             letter = validationLetter(in);
-            int indexWord = word.indexOf(String.valueOf(letter));
 
-            if(indexWord >= 0){
-                int indexMask = mask.indexOf(String.valueOf(letter));
-                if(indexMask == -1){
-                    for(int i = 0; i < arrWord.length; i++){
-                        if(letter == arrWord[i]){
-                            arrMask[i] = letter;
-                        }
+            if(usedChars.add(letter)){ // true = добавилась, false = уже была
+                boolean change = false;
+                for(int i = 0; i < word.length(); i++){
+                    if(word.charAt(i) == letter){
+                        maskBuilder.setCharAt(i,letter);
+                        change = true;
                     }
-                    mask = new String(arrMask);
-                    System.out.println("Error = " + error);
-                    draw(array, error);
+
                 }
-                else{
-                    System.out.println("Error ! You already enter this letter !");
-                    System.out.println("Error = " + error);
-                    draw(array, error);
+                if(!change){
+                    error++;
+                    System.out.println("This letter is not in the word");
                 }
             }
             else{
-                error++;
-                System.out.println("This letter is not in the word");
-                System.out.println("Error = " + error);
-                draw(array, error);
+                System.out.println("Error ! You already enter this letter !");
             }
+            System.out.println("Error = " + error);
+            draw(array, error);
         }
-        if(word.equals(mask)){
+        if(word.equals(maskBuilder.toString())){
             System.out.println("You win !");
         }
         else{
             System.out.println("You lose !");
+            System.out.println("This word: " + word);
+            System.out.println("Used letter's: " + usedChars);
         }
     }
 
@@ -175,7 +172,7 @@ public class Main {
                 List<List<String>> arr = startArrayList();
                 showArrayList(arr);
 
-                game(word, maskWord(word), scanner, arr);
+                doGame(word, scanner, arr);
             }
         }
     }
