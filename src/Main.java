@@ -18,16 +18,12 @@ public class Main {
         ArrayList<String> words = readFile(fileName);
         boolean game = true;
 
-
         while(game){
             game = askToStart(scanner);
             if(game){
                 String word = getRandomWord(words);
-
-                List<List<String>> arr = loadDefualtPicture();
-                showArrayList(arr);
-
-                doGame(word, scanner, arr);
+                System.out.println(HangmanRenderer.render(0));
+                doGame(word, scanner);
             }
         }
     }
@@ -69,39 +65,7 @@ public class Main {
         return MASK_LETTER.repeat(word.length());
     }
 
-    private static void draw(List<List<String>> array, int error){
-        switch (error){
-            case 0:
-                showArrayList(array);
-                break;
-            case 1:
-                array.get(2).set(4, "O");
-                showArrayList(array);
-                break;
-            case 2:
-                array.get(3).set(3, "|");
-                showArrayList(array);
-                break;
-            case 3:
-                array.get(3).set(2, "/");
-                showArrayList(array);
-                break;
-            case 4:
-                array.get(3).set(4, "|");
-                showArrayList(array);
-                break;
-            case 5:
-                array.get(4).set(3, "|");
-                showArrayList(array);
-                break;
-            case 6:
-                array.get(4).set(4, "|");
-                showArrayList(array);
-                break;
-        }
-    }
-
-    private static void doGame(String word, Scanner in, List<List<String>> array){
+    private static void doGame(String word, Scanner in){
         String mask = maskWord(word);
         StringBuilder maskBuilder = new StringBuilder(mask);
         char letter;
@@ -130,7 +94,7 @@ public class Main {
                 System.out.println("Error ! You already enter this letter !");
             }
             System.out.println("Error = " + error);
-            HangmanRenderer.render(error);
+            System.out.println(HangmanRenderer.render(error));
             System.out.println("Used letter's: " + usedChars);
         }
         if(word.equals(maskBuilder.toString())){
@@ -164,26 +128,5 @@ public class Main {
             }
         }
         return letter;
-    }
-
-    private static List<List<String>> loadDefualtPicture(){
-        List<List<String>> arr = new ArrayList<>();
-        arr.add(new ArrayList<>(List.of("|", "-", "-", "-", "", "")));
-        arr.add(new ArrayList<>(List.of("|", "", "", "", "|", "")));
-        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
-        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
-        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
-        arr.add(new ArrayList<>(List.of("|", "", "", "", "", "")));
-        arr.add(new ArrayList<>(List.of("_", "_", "_", "_", "_", "")));
-        return arr;
-    }
-
-    private static void showArrayList(List<List<String>> arr){
-        for(int i = 0; i < arr.size(); i++){
-            for(int j = 0; j < arr.get(i).size(); j++){
-                System.out.print(arr.get(i).get(j) + " ");
-            }
-            System.out.println();
-        }
     }
 }
